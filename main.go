@@ -7,6 +7,10 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+
+	"github.com/dmitriivoitovich/test-assignment-sliide/app"
+	"github.com/dmitriivoitovich/test-assignment-sliide/app/config"
+	"github.com/dmitriivoitovich/test-assignment-sliide/app/provider"
 )
 
 var (
@@ -14,13 +18,13 @@ var (
 
 	// app gets initialised with configuration.
 	// as an example we've added 3 providers and a default configuration
-	app = App{
-		ContentClients: map[Provider]Client{
-			Provider1: SampleContentProvider{Source: Provider1},
-			Provider2: SampleContentProvider{Source: Provider2},
-			Provider3: SampleContentProvider{Source: Provider3},
+	handler = app.App{
+		ContentClients: map[provider.Provider]provider.Client{
+			provider.Provider1: &provider.SampleContentProvider{Source: provider.Provider1},
+			provider.Provider2: &provider.SampleContentProvider{Source: provider.Provider2},
+			provider.Provider3: &provider.SampleContentProvider{Source: provider.Provider3},
 		},
-		Config: DefaultConfig,
+		Config: config.DefaultContentMix,
 	}
 )
 
@@ -30,7 +34,7 @@ func main() {
 
 	srv := http.Server{
 		Addr:    *addr,
-		Handler: app,
+		Handler: handler,
 	}
 
 	idleConnsClosed := make(chan struct{})
